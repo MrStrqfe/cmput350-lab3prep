@@ -7,12 +7,13 @@
 template<class T>
 class UniquePtr {
 public:
-    // Constructors
+    // Constructors: start unmangaged
     UniquePtr()
         : mPtr(nullptr) {}    
 
     UniquePtr(T* p) : mPtr(p) {}
 
+    // Deconstructor: clean up owned memory if valid
     ~UniquePtr<T>() {
         if (mPtr != nullptr) {
             delete mPtr;
@@ -34,7 +35,7 @@ public:
         other.mPtr = nullptr;
     }
 
-    // Move Assignment
+    // Move Assignment: free old resource first, then take the new one
     UniquePtr& operator=(UniquePtr&& other) noexcept {
         if (this != &other) {
             delete mPtr;
@@ -44,9 +45,12 @@ public:
         return *this;
     }
     
+    // Converting move constructor
     template<class U>
-    UniquePtr(UniquePtr<U>&& other): mPtr{other.release()} {}
+    UniquePtr(UniquePtr<U>&& other): 
+        mPtr{other.release()} {}
 
+    // Standard pointer access operators
     // Deference
     T& operator*() const {
         return *mPtr;
