@@ -14,7 +14,7 @@ public:
     UniquePtr(T* p) : mPtr(p) {}
 
     // Deconstructor: clean up owned memory if valid
-    ~UniquePtr<T>() {
+    ~UniquePtr() {
         if (mPtr != nullptr) {
             delete mPtr;
         }    
